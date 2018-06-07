@@ -23,6 +23,7 @@
 #include <QUrl>
 #include <QPixmapCache>
 #include "data/data.h"
+#include "data/poi.h"
 #include "map/maplist.h"
 #include "map/emptymap.h"
 #include "map/downloader.h"
@@ -94,14 +95,6 @@ GUI::GUI()
 	updateGraphTabs();
 	updateMapView();
 	updateStatusBarInfo();
-}
-
-GUI::~GUI()
-{
-	for (int i = 0; i < _tabs.size(); i++) {
-		if (_graphTabWidget->indexOf(_tabs.at(i)) < 0)
-			delete _tabs.at(i);
-	}
 }
 
 void GUI::loadMaps()
@@ -557,12 +550,12 @@ void GUI::createGraphTabs()
 	_graphTabWidget->setDocumentMode(true);
 #endif // Q_OS_WIN32
 
-	_tabs.append(new ElevationGraph);
-	_tabs.append(new SpeedGraph);
-	_tabs.append(new HeartRateGraph);
-	_tabs.append(new CadenceGraph);
-	_tabs.append(new PowerGraph);
-	_tabs.append(new TemperatureGraph);
+	_tabs.append(new ElevationGraph(_graphTabWidget));
+	_tabs.append(new SpeedGraph(_graphTabWidget));
+	_tabs.append(new HeartRateGraph(_graphTabWidget));
+	_tabs.append(new CadenceGraph(_graphTabWidget));
+	_tabs.append(new PowerGraph(_graphTabWidget));
+	_tabs.append(new TemperatureGraph(_graphTabWidget));
 
 	for (int i = 0; i < _tabs.count(); i++)
 		connect(_tabs.at(i), SIGNAL(sliderPositionChanged(qreal)), this,
